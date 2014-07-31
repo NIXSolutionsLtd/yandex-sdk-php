@@ -16,6 +16,8 @@ use Guzzle\Http\Message\Response;
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\Exception\ClientErrorResponseException;
 use Yandex\Common\AbstractServiceClient;
+use Yandex\Common\Exception\ForbiddenException;
+use Yandex\Metrika\Exception\MetrikaException;
 
 /**
  * Class MetrikaClient
@@ -44,6 +46,42 @@ class MetrikaClient extends AbstractServiceClient
     public function __construct($token = '')
     {
         $this->setAccessToken($token);
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @return Response
+     * @throws MetrikaException
+     * @throws ForbiddenException
+     */
+    protected function sendRequest(RequestInterface $request)
+    {
+        try {
+            $request = $this->prepareRequest($request);
+            $response = $request->send();
+        } catch (ClientErrorResponseException $ex) {
+            $result = $request->getResponse();
+            $code = $result->getStatusCode();
+            $message = $result->getReasonPhrase();
+
+            $body = $result->getBody(true);
+            if ($body) {
+                $jsonBody = json_decode($body);
+                if ($jsonBody && isset($jsonBody->error) && isset($jsonBody->error->message)) {
+                    $message = $jsonBody->error->message;
+                }
+            }
+
+            if ($code === 403) {
+                throw new ForbiddenException($message);
+            }
+
+            throw new MetrikaException(
+                'Yandex.Metrika responded with error code: "' . $code . '" and message: "' . $message . '"'
+            );
+        }
+
+        return $response;
     }
 
     /**
@@ -403,7 +441,7 @@ class MetrikaClient extends AbstractServiceClient
      * @param array $params
      * @return array
      */
-    public function getStat($item = null, $counterId, array $params = array())
+    public function getStat($item, $counterId, array $params = array())
     {
         $params['id'] = $counterId;
 
