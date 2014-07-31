@@ -16,7 +16,7 @@ use Yandex\Common\Exception\YandexException;
  *
  * @package  Yandex\Metrika\Exception
  *
- *  @author Maxim Hodyrev <maximkou@gmail.com>
+ * @author Maxim Hodyrev <maximkou@gmail.com>
  * @created 31.07.2014 13:12
  */
 class MetrikaException extends YandexException

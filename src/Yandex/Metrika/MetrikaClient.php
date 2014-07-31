@@ -11,10 +11,10 @@
  */
 namespace Yandex\Metrika;
 
+use Guzzle\Http\Exception\ClientErrorResponseException;
 use Guzzle\Service\Client;
 use Guzzle\Http\Message\Response;
 use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\Exception\ClientErrorResponseException;
 use Yandex\Common\AbstractServiceClient;
 use Yandex\Common\Exception\ForbiddenException;
 use Yandex\Metrika\Exception\MetrikaException;
@@ -30,11 +30,6 @@ use Yandex\Metrika\Exception\MetrikaException;
  */
 class MetrikaClient extends AbstractServiceClient
 {
-    /**
-     * @var Client
-     */
-    protected $client;
-
     /**
      * @var string
      */
@@ -60,24 +55,27 @@ class MetrikaClient extends AbstractServiceClient
             $request = $this->prepareRequest($request);
             $response = $request->send();
         } catch (ClientErrorResponseException $ex) {
-            $result = $request->getResponse();
-            $code = $result->getStatusCode();
-            $message = $result->getReasonPhrase();
+            $response = $request->getResponse();
+            $statusCode = $response->getStatusCode();
+            $errorMessage = $response->getReasonPhrase();
 
-            $body = $result->getBody(true);
-            if ($body) {
+            if ($body = $response->getBody(true)) {
                 $jsonBody = json_decode($body);
-                if ($jsonBody && isset($jsonBody->error) && isset($jsonBody->error->message)) {
-                    $message = $jsonBody->error->message;
+                if ($jsonBody && isset($jsonBody->error->message)) {
+                    $errorMessage = $jsonBody->error->message;
                 }
             }
 
-            if ($code === 403) {
-                throw new ForbiddenException($message);
+            if ($statusCode === 403) {
+                throw new ForbiddenException($errorMessage);
             }
 
             throw new MetrikaException(
-                'Yandex.Metrika responded with error code: "' . $code . '" and message: "' . $message . '"'
+                sprintf(
+                    'Yandex.Metrika responded with error code: "%s" and message: "%s"',
+                    $statusCode,
+                    $errorMessage
+                )
             );
         }
 
@@ -469,33 +467,35 @@ class MetrikaClient extends AbstractServiceClient
             $request->getQuery()->add($name, $val);
         }
 
-        return $this->getJsonRequestResult($request);
+        return $this->getRequestResult($request);
     }
 
     protected function add($resource, array $params = array())
     {
-        $request = $this->getClient($resource)
-            ->createRequest(RequestInterface::POST, null, null, json_encode($params));
-
-        return $this->getJsonRequestResult($request);
+        return $this->crud(RequestInterface::POST, $resource, $params);
     }
 
     protected function edit($resource, array $params = array())
     {
-        $request = $this->getClient($resource)
-            ->createRequest(RequestInterface::PUT, null, null, json_encode($params));
+        return $this->crud(RequestInterface::PUT, $resource, $params);
+    }
 
-        return $this->getJsonRequestResult($request);
+    protected function crud($method, $resource, array $params = array())
+    {
+        $request = $this->getClient($resource)
+            ->createRequest($method, null, null, json_encode($params));
+
+        return $this->getRequestResult($request);
     }
 
     protected function delete($resource)
     {
-        return $this->getJsonRequestResult(
+        return $this->getRequestResult(
             $this->getClient($resource)->createRequest(RequestInterface::DELETE)
         );
     }
 
-    protected function getJsonRequestResult(RequestInterface $request)
+    protected function getRequestResult(RequestInterface $request)
     {
         return $this->sendRequest($request)->json();
     }
