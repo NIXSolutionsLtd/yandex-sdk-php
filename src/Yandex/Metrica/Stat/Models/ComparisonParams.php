@@ -15,6 +15,10 @@ class ComparisonParams extends Model
 
     protected $callback = null;
 
+    protected $date1 = null;
+
+    protected $date2 = null;
+
     protected $date1A = null;
 
     protected $date1B = null;
@@ -144,6 +148,30 @@ class ComparisonParams extends Model
     public function setCallback($callback)
     {
         $this->callback = $callback;
+        return $this;
+    }
+
+    /**
+     * Set the date1 property
+     *
+     * @param string $date1
+     * @return $this
+     */
+    public function setDate1($date1)
+    {
+        $this->date1 = $date1;
+        return $this;
+    }
+
+    /**
+     * Set the date1 property
+     *
+     * @param string $date2
+     * @return $this
+     */
+    public function setDate2($date2)
+    {
+        $this->date2 = $date2;
         return $this;
     }
 
