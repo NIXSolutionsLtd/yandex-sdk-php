@@ -324,33 +324,64 @@ class DiskClient extends AbstractServiceClient
      * @param array $extraHeaders
      * @return void
      */
-    public function uploadFile($path = '', $file = null, $extraHeaders = null)
+    public function uploadFile($path = '', $file = null, $extraHeaders = array())
     {
         if (file_exists($file['path'])) {
             $headers = array(
                 'Content-Length' => (string)$file['size']
             );
-            $finfo = finfo_open(FILEINFO_MIME);
-            $mime = finfo_file($finfo, $file['path']);
-            $parts = explode(";", $mime);
-            $headers['Content-Type'] = $parts[0];
+
+            list($headers['Content-Type']) = explode(";", finfo_file(finfo_open(FILEINFO_MIME), $file['path']));
             $headers['Etag'] = md5_file($file['path']);
             $headers['Sha256'] = hash_file('sha256', $file['path']);
-            $headers['Host'] = $this->getServiceDomain();
-            $headers['Accept'] = '*/*';
-            $headers['Authorization'] = 'OAuth ' . $this->getAccessToken();
-            $headers = isset($extraHeaders) ? array_merge($headers, $extraHeaders) : $headers;
+            $headers = array_merge($headers, $this->getCommonUploadHeaders(), $extraHeaders);
 
-            $client = new Client($this->getServiceUrl());
-            $request = $client->createRequest(
-                'PUT',
-                $path . $file['name'],
-                $headers,
-                file_get_contents($file['path'])
-            );
-            $this->sendRequest($request);
+            $this->putFileContent($path . $file['name'], file_get_contents($file['path']), $headers);
         }
     }
+
+    /**
+     * @param string $path
+     * @param string $content
+     * @param array $extraHeaders
+     * @return void
+     */
+    public function uploadFileContent($path, $content, $extraHeaders = array())
+    {
+        $headers = array(
+            'Content-Length' => strlen($content)
+        );
+
+        list($headers['Content-Type']) = explode(";", finfo_buffer(finfo_open(FILEINFO_MIME), $content));
+        $headers['Etag'] = md5($content);
+        $headers['Sha256'] = hash('sha256', $content);
+        $headers = array_merge($headers, $this->getCommonUploadHeaders(), $extraHeaders);
+
+        $this->putFileContent($path, $content, $headers);
+    }
+
+    private function putFileContent($filePath, $content, $headers)
+    {
+        $client = new Client($this->getServiceUrl());
+        $request = $client->createRequest(
+            'PUT',
+            $filePath,
+            $headers,
+            $content
+        );
+
+        $this->sendRequest($request);
+    }
+
+    private function getCommonUploadHeaders()
+    {
+        return array(
+            'Host' => $this->getServiceDomain(),
+            'Authorization' => 'OAuth ' . $this->getAccessToken(),
+            'Accept' => '*/*'
+        );
+    }
+
 
     /**
      * @param $path
