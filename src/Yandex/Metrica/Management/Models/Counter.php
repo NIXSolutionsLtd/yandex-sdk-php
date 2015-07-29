@@ -33,6 +33,10 @@ class Counter extends Model
     protected $partnerId = null;
 
     protected $code = null;
+    
+    protected $createTime = null;
+    
+    protected $updateTime = null;
 
     protected $monitoring = null;
 
@@ -59,6 +63,8 @@ class Counter extends Model
         'codeStatus' => 'code_status',
         'codeOptions' => 'code_options',
         'partnerId' => 'partner_id',
+        'createTime' => 'create_time',
+        'updateTime' => 'update_time',
         'filterRobots' => 'filter_robots',
         'timeZoneName' => 'time_zone_name',
         'visitThreshold' => 'visit_threshold',
@@ -307,6 +313,26 @@ class Counter extends Model
     {
         $this->partnerId = $partnerId;
         return $this;
+    }
+
+    /**
+     * Retrieve the createTime property
+     *
+     * @return string|null
+     */    
+    public function getCreateTime()
+    {
+        return $this->createTime;
+    }
+    
+    /**
+     * Retrieve the updateTime property
+     *
+     * @return string|null
+     */
+    public function getUpdateTime()
+    {
+        return $this->updateTime;
     }
 
     /**
