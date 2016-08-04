@@ -20,6 +20,11 @@ class Verification extends Model
     protected $details = null;
 
     /**
+     * @var string $uin
+     */
+    protected $uin = null;
+    
+    /**
      * @var string $type
      */
     protected $type = null;
@@ -93,7 +98,26 @@ class Verification extends Model
 
         return $this;
     }
+    
+    /**
+     * @return string
+     */
+    public function getUin()
+    {
+        return $this->uin;
+    }
 
+    /**
+     * @param string $uin
+     * @return $this
+     */
+    protected function setUin($uin)
+    {
+        $this->uin = $uin;
+
+        return $this;
+    }
+    
     /**
      * @return string
      */
