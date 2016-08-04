@@ -55,7 +55,7 @@ class SpellerClient extends AbstractServiceClient
      * @param string $text
      * @param array $params
      *
-     * @return mixed|\SimpleXMLElement
+     * @return mixed|\SimpleXMLIterator
      *
      * @throws \Yandex\Common\Exception\MissedArgumentException
      * @throws \Yandex\Common\Exception\ProfileNotFoundException
@@ -86,7 +86,7 @@ class SpellerClient extends AbstractServiceClient
      * @param string[] $texts
      * @param array $params
      *
-     * @return mixed|\SimpleXMLElement
+     * @return mixed|\SimpleXMLIterator
      *
      * @throws \Yandex\Common\Exception\MissedArgumentException
      * @throws \Yandex\Common\Exception\ProfileNotFoundException

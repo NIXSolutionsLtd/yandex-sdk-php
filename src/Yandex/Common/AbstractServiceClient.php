@@ -314,7 +314,7 @@ abstract class AbstractServiceClient extends AbstractPackage
     /**
      * @param $body
      * @param string $type
-     * @return mixed|\SimpleXMLElement
+     * @return mixed|\SimpleXMLIterator
      */
     protected function getDecodedBody($body, $type = null)
     {
@@ -323,7 +323,7 @@ abstract class AbstractServiceClient extends AbstractPackage
         }
         switch ($type) {
             case self::DECODE_TYPE_XML:
-                return simplexml_load_string((string) $body);
+                return simplexml_load_string((string) $body, 'SimpleXMLIterator');
             case self::DECODE_TYPE_JSON:
             default:
                 return json_decode((string) $body, true);
