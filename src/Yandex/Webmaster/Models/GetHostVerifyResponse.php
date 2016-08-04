@@ -42,10 +42,13 @@ class GetHostVerifyResponse extends XmlResponseModel
     /**
      * Set Host
      *
-     * @param $host
+     * @param Host $host
+     * @return self
      */
-    public function setHost($host)
+    public function setHost(Host $host)
     {
         $this->host = $host;
+
+        return $this;
     }
 }

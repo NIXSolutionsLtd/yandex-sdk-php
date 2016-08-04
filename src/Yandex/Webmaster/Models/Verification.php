@@ -66,10 +66,13 @@ class Verification extends Model
 
     /**
      * @param string $state
+     * @return self
      */
-    protected function setState($state)
+    public function setState($state)
     {
         $this->state = $state;
+
+        return $this;
     }
 
     /**
@@ -82,10 +85,13 @@ class Verification extends Model
 
     /**
      * @param string $details
+     * @return $this
      */
     protected function setDetails($details)
     {
         $this->details = $details;
+
+        return $this;
     }
 
     /**
@@ -98,10 +104,13 @@ class Verification extends Model
 
     /**
      * @param string $type
+     * @return $this
      */
     protected function setType($type)
     {
         $this->type = $type;
+
+        return $this;
     }
 
     /**
@@ -114,10 +123,13 @@ class Verification extends Model
 
     /**
      * @param string $possibleToCancel
+     * @return $this
      */
     protected function setPossibleToCancel($possibleToCancel)
     {
         $this->possibleToCancel = $possibleToCancel;
+
+        return $this;
     }
 
     /**
@@ -130,9 +142,12 @@ class Verification extends Model
 
     /**
      * @param string $date
+     * @return $this
      */
     protected function setDate($date)
     {
         $this->date = $date;
+
+        return $this;
     }
 }

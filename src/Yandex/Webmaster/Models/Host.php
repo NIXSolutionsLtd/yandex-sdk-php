@@ -67,7 +67,6 @@ class Host extends Model
      */
     protected $linksCount = null;
 
-
     /**
      * {@inheritdoc}
      */

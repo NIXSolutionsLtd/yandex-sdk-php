@@ -42,8 +42,7 @@ class Hosts extends ObjectModel
     /**
      * Add item
      *
-     * @param \SimpleXMLIterator $host
-     *
+     * @param \SimpleXMLIterator $hostXmlNode
      * @return $this
      */
     public function add(\SimpleXMLIterator $hostXmlNode)

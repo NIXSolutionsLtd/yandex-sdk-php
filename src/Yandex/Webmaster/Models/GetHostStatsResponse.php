@@ -45,7 +45,7 @@ class GetHostStatsResponse extends XmlResponseModel
      * @param $host
      * @return self
      */
-    public function setHost($host)
+    public function setHost(Host $host)
     {
         $this->host = $host;
 

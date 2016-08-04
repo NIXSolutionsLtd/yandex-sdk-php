@@ -11,6 +11,7 @@ use Yandex\Webmaster\Models\GetHostsResponse;
 use Yandex\Webmaster\Models\GetHostStatsResponse;
 use Yandex\Webmaster\Models\GetHostVerifyResponse;
 use Yandex\Webmaster\Models\Host;
+use Yandex\Webmaster\Models\Hosts;
 
 /**
  * Class WebmasterClient
@@ -42,7 +43,7 @@ class WebmasterClient extends AbstractServiceClient
     /**
      * @see https://tech.yandex.ru/webmaster/doc/dg/reference/hosts-docpage/
      *
-     * @return Models\Hosts
+     * @return Hosts
      */
     public function getHosts()
     {
@@ -71,10 +72,15 @@ class WebmasterClient extends AbstractServiceClient
     }
 
 
-
-    public function getHostVerify($id)
+    /**
+     * @see https://tech.yandex.ru/webmaster/doc/dg/reference/hosts-verify-docpage/
+     *
+     * @param string|int $hostId
+     * @return Host
+     */
+    public function getHostVerify($hostId)
     {
-        $resource = 'hosts/'.$id.'/verify';
+        $resource = 'hosts/'.$hostId.'/verify';
 
         $response = $this->sendGetRequest($resource);
         $hostVerifyResponse = new GetHostVerifyResponse($response);
