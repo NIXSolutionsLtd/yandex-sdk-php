@@ -92,7 +92,7 @@ class Verification extends Model
      * @param string $details
      * @return $this
      */
-    protected function setDetails($details)
+    public function setDetails($details)
     {
         $this->details = $details;
 
@@ -111,7 +111,7 @@ class Verification extends Model
      * @param string $uin
      * @return $this
      */
-    protected function setUin($uin)
+    public function setUin($uin)
     {
         $this->uin = $uin;
 
@@ -130,7 +130,7 @@ class Verification extends Model
      * @param string $type
      * @return $this
      */
-    protected function setType($type)
+    public function setType($type)
     {
         $this->type = $type;
 
@@ -149,7 +149,7 @@ class Verification extends Model
      * @param string $possibleToCancel
      * @return $this
      */
-    protected function setPossibleToCancel($possibleToCancel)
+    public function setPossibleToCancel($possibleToCancel)
     {
         $this->possibleToCancel = $possibleToCancel;
 
