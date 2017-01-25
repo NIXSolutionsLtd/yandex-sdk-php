@@ -435,7 +435,7 @@ class PartnerClient extends AbstractServiceClient
      */
     private function filterParams(array $params)
     {
-        return array_filter($params, function($param) {
+        return array_filter($params, function ($param) {
             return !empty($param);
         });
     }
