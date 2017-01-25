@@ -1,4 +1,10 @@
 <?php
+/**
+ * Yandex PHP Library
+ *
+ * @copyright NIX Solutions Ltd.
+ * @link https://github.com/nixsolutions/yandex-php-library
+ */
 
 namespace Yandex\Market\Partner\Models;
 
