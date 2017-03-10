@@ -263,6 +263,26 @@ class PartnerClient extends AbstractServiceClient
         . ', oauth_login=' . $this->getLogin();
     }
 
+
+    /**
+     * Get Balance Campaign
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-balance-docpage/
+     */
+    public function getBalance()
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/balance.json';
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+
+        $getBalanceResponse = new Models\GetBalanceResponse($decodedResponseBody);
+
+        return $getBalanceResponse->getBalance();
+    }
+
+
     /**
      * Get User Campaigns
      *
