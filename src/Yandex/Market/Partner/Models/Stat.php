@@ -15,7 +15,7 @@ class Stat extends Model
     protected $spending = null;
 
     protected $shows = null;
-    
+
     protected $detailedStats = null;
 
     /**
@@ -119,6 +119,4 @@ class Stat extends Model
         $this->detailedStats = $detailedStats;
         return $this;
     }
-
-
 }

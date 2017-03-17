@@ -1,12 +1,10 @@
 <?php
-
 namespace Yandex\Market\Partner\Models;
 
 use Yandex\Common\ObjectModel;
 
 class Stats extends ObjectModel
 {
-
     protected $collection = [];
 
     protected $mappingClasses = [];
@@ -23,7 +21,6 @@ class Stats extends ObjectModel
         } elseif (is_object($stat) && $stat instanceof Stat) {
             $this->collection[] = $stat;
         }
-
         return $this;
     }
 
@@ -34,5 +31,4 @@ class Stats extends ObjectModel
     {
         return $this->collection;
     }
-
 }

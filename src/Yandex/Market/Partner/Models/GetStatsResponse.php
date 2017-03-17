@@ -14,7 +14,6 @@ class GetStatsResponse extends Model
 
     protected $propNameMap = [];
 
-
     /**
      * @return null
      */
@@ -32,5 +31,4 @@ class GetStatsResponse extends Model
         $this->stats = $mainStats;
         return $this;
     }
-
 }
