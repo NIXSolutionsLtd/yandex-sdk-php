@@ -31,4 +31,3 @@ class GetRegionResponse extends Model
         return $this;
     }
 }
-
