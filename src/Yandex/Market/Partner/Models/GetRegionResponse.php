@@ -21,13 +21,4 @@ class GetRegionResponse extends Model
     {
         return $this->region;
     }
-
-    /**
-     * @param null $region
-     */
-    public function setRegion($region)
-    {
-        $this->region = $region;
-        return $this;
-    }
 }
