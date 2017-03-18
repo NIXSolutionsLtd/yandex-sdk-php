@@ -15,23 +15,11 @@ class Balance extends Model
     /**
      * Retrieve the balance property
      *
-     * @return int|null
+     * @return float|null
      */
     public function getBalance()
     {
         return $this->balance;
-    }
-
-    /**
-     * Set the balance property
-     *
-     * @param int $balance
-     * @return $this
-     */
-    public function setBalance($balance)
-    {
-        $this->balance = $balance;
-        return $this;
     }
 
     /**
@@ -43,28 +31,10 @@ class Balance extends Model
     }
 
     /**
-     *
-     */
-    public function setDaysLeft($daysLeft)
-    {
-        $this->daysLeft = $daysLeft;
-        return $this;
-    }
-
-    /**
-     * @return  int|null
+     * @return  float|null
      */
     public function getRecommendedPayment()
     {
         return $this->recommendedPayment;
-    }
-
-    /**
-     *
-     */
-    public function setRecommendedPayment($recommendedPayment)
-    {
-        $this->recommendedPayment = $recommendedPayment;
-        return $this;
     }
 }
