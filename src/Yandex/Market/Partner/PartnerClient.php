@@ -345,6 +345,25 @@ class PartnerClient extends AbstractServiceClient
         return $getOrderResponse->getOrder();
     }
 
+    /**
+     * Get Campaign settings
+     *
+     * @retun Models\Settings
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-settings-docpage/
+     */
+    public function getSettings()
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/settings.json';
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+
+        $getSettingsResponse = new Models\GetSettingsResponse($decodedResponseBody);
+        return $getSettingsResponse->getSettings();
+    }
+
 
     /**
      * Send changed status to Yandex.Market
