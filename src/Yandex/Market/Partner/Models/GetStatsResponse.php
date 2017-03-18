@@ -21,14 +21,4 @@ class GetStatsResponse extends Model
     {
         return $this->mainStats;
     }
-
-    /**
-     * @param $stats
-     * @return $this
-     */
-    public function setMainStats($mainStats)
-    {
-        $this->stats = $mainStats;
-        return $this;
-    }
 }

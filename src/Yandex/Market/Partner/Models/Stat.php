@@ -27,29 +27,11 @@ class Stat extends Model
     }
 
     /**
-     * @param null $date
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
-        return $this;
-    }
-
-    /**
      * @return null
      */
     public function getPlaceGroup()
     {
         return $this->placeGroup;
-    }
-
-    /**
-     * @param null $placeGroup
-     */
-    public function setPlaceGroup($placeGroup)
-    {
-        $this->placeGroup = $placeGroup;
-        return $this;
     }
 
     /**
@@ -61,29 +43,11 @@ class Stat extends Model
     }
 
     /**
-     * @param null $clicks
-     */
-    public function setClicks($clicks)
-    {
-        $this->clicks = $clicks;
-        return $this;
-    }
-
-    /**
      * @return null
      */
     public function getSpending()
     {
         return $this->spending;
-    }
-
-    /**
-     * @param null $spending
-     */
-    public function setSpending($spending)
-    {
-        $this->spending = $spending;
-        return $this;
     }
 
     /**
@@ -95,28 +59,10 @@ class Stat extends Model
     }
 
     /**
-     * @param null $shows
-     */
-    public function setShows($shows)
-    {
-        $this->shows = $shows;
-        return $this;
-    }
-
-    /**
      * @return null
      */
     public function getDetailedStats()
     {
         return $this->detailedStats;
-    }
-
-    /**
-     * @param null $detailedStats
-     */
-    public function setDetailedStats($detailedStats)
-    {
-        $this->detailedStats = $detailedStats;
-        return $this;
     }
 }
