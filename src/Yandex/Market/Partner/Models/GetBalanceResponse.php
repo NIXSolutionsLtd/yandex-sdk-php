@@ -28,3 +28,4 @@ class GetBalanceResponse extends Model
         $this->balance = $balance;
     }
 }
+
