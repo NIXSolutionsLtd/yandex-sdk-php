@@ -68,4 +68,3 @@ class Balance extends Model
         return $this;
     }
 }
-
