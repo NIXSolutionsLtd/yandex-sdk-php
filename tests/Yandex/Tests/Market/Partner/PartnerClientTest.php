@@ -225,6 +225,28 @@ class PartnerClientTest extends TestCase
         );
     }
 
+    public function testGetBalance()
+    {
+        $json = file_get_contents(__DIR__ . '/' . $this->fixturesFolder . '/get-balance.json');
+        $jsonObj = json_decode($json);
+        $balance = $jsonObj->balance;
+
+        $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for($json));
+        $marketPartnerMock = $this->getMockBuilder(PartnerClient::class)
+            ->setMethods(['sendRequest'])
+            ->getMock();
+        $marketPartnerMock->expects($this->any())
+            ->method('sendRequest')
+            ->will($this->returnValue($response));
+
+        /** @var $balanceResp \Yandex\Market\Partner\Models\Balance */
+        $balanceResp = $marketPartnerMock->getBalance();
+
+        $this->assertEquals($balance->balance, $balanceResp->getBalance());
+        $this->assertEquals($balance->daysLeft, $balanceResp->getDaysLeft());
+        $this->assertEquals($balance->recommendedPayment, $balanceResp->getRecommendedPayment());
+    }
+    
     public function testGetPropertiesPartnerClient()
     {
         $marketPartnerMock = $this->getMockBuilder(PartnerClient::class)
@@ -273,6 +295,33 @@ class PartnerClientTest extends TestCase
         $this->assertEquals($address->apartment, $updateDeliveryResp->getDelivery()->getAddress()->getApartment());
         $this->assertEquals($address->recipient, $updateDeliveryResp->getDelivery()->getAddress()->getRecipient());
         $this->assertEquals($address->phone, $updateDeliveryResp->getDelivery()->getAddress()->getPhone());
+    }
+
+    public function testGetRegion()
+    {
+        $json = file_get_contents(__DIR__ . '/' . $this->fixturesFolder . '/get-region.json');
+        $jsonObj = json_decode($json);
+        $region = $jsonObj->region;
+
+        $response = new Response(200, [], \GuzzleHttp\Psr7\stream_for($json));
+        $marketPartnerMock = $this->getMockBuilder(PartnerClient::class)
+            ->setMethods(['sendRequest'])
+            ->getMock();
+        $marketPartnerMock->expects($this->any())
+            ->method('sendRequest')
+            ->will($this->returnValue($response));
+
+        /** @var \Yandex\Market\Partner\Models\Region */
+        $regionResp = $marketPartnerMock->getRegion();
+
+        $this->assertEquals($region->id, $regionResp->getId());
+        $this->assertEquals($region->name, $regionResp->getName());
+        $this->assertEquals($region->type, $regionResp->getType());
+
+        // parent
+        $this->assertEquals($region->parent->id, $regionResp->getParent()->getId());
+        $this->assertEquals($region->parent->name, $regionResp->getParent()->getName());
+        $this->assertEquals($region->parent->type, $regionResp->getParent()->getType());
     }
 
     public function testSetOrderStatus()
