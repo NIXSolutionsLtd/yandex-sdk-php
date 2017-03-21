@@ -98,7 +98,7 @@ class PartnerClient extends AbstractServiceClient
     //почта
     const DELIVERY_TYPE_POST = 'POST';
 
-    const ORDER_DECLINE_REASON_OUT_OF_DATE= 'OUT_OF_DATE';
+    const ORDER_DECLINE_REASON_OUT_OF_DATE = 'OUT_OF_DATE';
 
     /**
      * Requested version of API
@@ -206,9 +206,9 @@ class PartnerClient extends AbstractServiceClient
     /**
      * Sends a request
      *
-     * @param string              $method  HTTP method
-     * @param string|UriInterface $uri     URI object or string.
-     * @param array               $options Request options to apply.
+     * @param string $method HTTP method
+     * @param string|UriInterface $uri URI object or string.
+     * @param array $options Request options to apply.
      *
      * @return Response
      *
@@ -264,6 +264,24 @@ class PartnerClient extends AbstractServiceClient
     }
 
     /**
+     * Get Balance Campaign
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-balance-docpage/
+     *
+     * @return Models\Balance
+     */
+    public function getBalance()
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/balance.json';
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+
+        $getBalanceResponse = new Models\GetBalanceResponse($decodedResponseBody);
+        return $getBalanceResponse->getBalance();
+    }
+
+    /**
      * Get User Campaigns
      *
      * Returns the user to the list of campaigns Yandex.market.
@@ -277,6 +295,25 @@ class PartnerClient extends AbstractServiceClient
     public function getCampaigns()
     {
         $resource = 'campaigns.json';
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+
+        $getCampaignsResponse = new Models\GetCampaignsResponse($decodedResponseBody);
+        return $getCampaignsResponse->getCampaigns();
+    }
+
+    /**
+     * Get User Campaigns by Login
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-by-login-docpage/
+     *
+     * @return Models\Campaigns
+     */
+    public function getCampaignsByLogin($login)
+    {
+        $resource = 'campaigns/by_login/' . $login . '.json';
 
         $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
 
@@ -346,6 +383,24 @@ class PartnerClient extends AbstractServiceClient
     }
 
     /**
+     * Get Region
+     *
+     * @return Models\Region
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-region-docpage/
+     */
+    public function getRegion()
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/region.json';
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+        $getRegionResponse = new Models\GetRegionResponse($decodedResponseBody);
+        return $getRegionResponse->getRegion();
+    }
+
+    /**
      * Get Campaign settings
      *
      * @retun Models\Settings
@@ -355,15 +410,34 @@ class PartnerClient extends AbstractServiceClient
     public function getSettings()
     {
         $resource = 'campaigns/' . $this->campaignId . '/settings.json';
+       
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+       
+        $getSettingsResponse = new Models\GetSettingsResponse($decodedResponseBody);
+        return $getSettingsResponse->getSettings();
+    }
+  
+    /**
+     * @param $method [main | main-daily | main-weekly | main-monthly]
+     * @param array $params
+     * @return Models\Stats
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-stats-main-docpage/
+     */
+    public function getStats($method, $params = [])
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/stats/' . $method . '.json';
+        $resource .= '?' . http_build_query($params);
 
         $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
 
         $decodedResponseBody = $this->getDecodedBody($response->getBody());
 
-        $getSettingsResponse = new Models\GetSettingsResponse($decodedResponseBody);
-        return $getSettingsResponse->getSettings();
+        $getStatsResponse = new Models\GetStatsResponse($decodedResponseBody);
+        return $getStatsResponse->getMainStats();
     }
-
 
     /**
      * Send changed status to Yandex.Market
