@@ -11,7 +11,6 @@
  */
 namespace Yandex\DataSync;
 
-use Psr\Http\Message\UriInterface;
 use Yandex\Common\AbstractServiceClient;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Exception\ClientException;
@@ -270,7 +269,7 @@ class DataSyncClient extends AbstractServiceClient
      * Sends a request
      *
      * @param string              $method  HTTP method
-     * @param UriInterface|string $uri     URI object or string.
+     * @param string $uri     URI object or string.
      * @param array               $options Request options to apply.
      *
      * @return Response|\Psr\Http\Message\ResponseInterface

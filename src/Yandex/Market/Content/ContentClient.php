@@ -13,14 +13,12 @@ namespace Yandex\Market\Content;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use Psr\Http\Message\UriInterface;
 use Yandex\Common\AbstractServiceClient;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Exception\ClientException;
 use Yandex\Common\Exception\ForbiddenException;
 use Yandex\Common\Exception\UnauthorizedException;
 use Yandex\Market\Content\Exception\ContentRequestException;
-use Yandex\Market\Content\Models;
 
 /**
  * Class ContentClient
@@ -105,7 +103,7 @@ class ContentClient extends AbstractServiceClient
      * Sends a request
      *
      * @param string              $method  HTTP method
-     * @param string|UriInterface $uri     URI object or string.
+     * @param string $uri     URI object or string.
      * @param array               $options Request options to apply.
      *
      * @return Response

@@ -13,7 +13,6 @@ namespace Yandex\Common;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use Psr\Http\Message\UriInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Yandex\Common\Exception\MissedArgumentException;
@@ -129,7 +128,7 @@ abstract class AbstractServiceClient extends AbstractPackage
     }
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getExpiresIn()
     {
@@ -295,7 +294,7 @@ abstract class AbstractServiceClient extends AbstractPackage
      * Sends a request
      *
      * @param string              $method  HTTP method
-     * @param string|UriInterface $uri     URI object or string.
+     * @param string $uri     URI object or string.
      * @param array               $options Request options to apply.
      *
      * @throws Exception\MissedArgumentException

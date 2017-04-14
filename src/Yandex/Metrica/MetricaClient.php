@@ -13,7 +13,6 @@ namespace Yandex\Metrica;
 
 use GuzzleHttp\ClientInterface;
 use Yandex\Common\AbstractServiceClient;
-use Psr\Http\Message\UriInterface;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Exception\ClientException;
 use Yandex\Common\Exception\ForbiddenException;
@@ -77,7 +76,7 @@ class MetricaClient extends AbstractServiceClient
      * Sends a request
      *
      * @param string              $method  HTTP method
-     * @param string|UriInterface $uri     URI object or string.
+     * @param string $uri     URI object or string.
      * @param array               $options Request options to apply.
      *
      * @return Response

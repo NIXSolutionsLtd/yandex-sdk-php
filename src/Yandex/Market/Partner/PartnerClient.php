@@ -11,12 +11,12 @@
  */
 namespace Yandex\Market\Partner;
 
-use Psr\Http\Message\UriInterface;
 use Yandex\Common\AbstractServiceClient;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Exception\ClientException;
 use Yandex\Common\Exception\ForbiddenException;
 use Yandex\Common\Exception\UnauthorizedException;
+use Yandex\Common\StringCollection;
 use Yandex\Market\Partner\Exception\PartnerRequestException;
 use Yandex\Market\Partner\Models\Delivery;
 use Yandex\Market\Partner\Models\GetCampaignsResponse;
@@ -108,7 +108,7 @@ class PartnerClient extends AbstractServiceClient
     //почта
     const DELIVERY_TYPE_POST = 'POST';
 
-    const ORDER_DECLINE_REASON_OUT_OF_DATE= 'OUT_OF_DATE';
+    const ORDER_DECLINE_REASON_OUT_OF_DATE = 'OUT_OF_DATE';
 
     /**
      * Requested version of API
@@ -216,9 +216,9 @@ class PartnerClient extends AbstractServiceClient
     /**
      * Sends a request
      *
-     * @param string              $method  HTTP method
-     * @param string|UriInterface $uri     URI object or string.
-     * @param array               $options Request options to apply.
+     * @param string $method HTTP method
+     * @param string $uri URI object or string.
+     * @param array $options Request options to apply.
      *
      * @return Response
      *
@@ -274,6 +274,24 @@ class PartnerClient extends AbstractServiceClient
     }
 
     /**
+     * Get Balance Campaign
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-balance-docpage/
+     *
+     * @return Models\Balance
+     */
+    public function getBalance()
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/balance.json';
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+
+        $getBalanceResponse = new Models\GetBalanceResponse($decodedResponseBody);
+        return $getBalanceResponse->getBalance();
+    }
+
+    /**
      * Get User Campaigns
      *
      * Returns the user to the list of campaigns Yandex.market.
@@ -294,6 +312,95 @@ class PartnerClient extends AbstractServiceClient
 
         $getCampaignsResponse = new GetCampaignsResponse($decodedResponseBody);
         return $getCampaignsResponse->getCampaigns();
+    }
+    
+    /**
+     * Get User Campaigns by Login
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-by-login-docpage/
+     *
+     * @return Models\Campaigns
+     */
+    public function getCampaignsByLogin($login)
+    {
+        $resource = 'campaigns/by_login/' . $login . '.json';
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+
+        $getCampaignsResponse = new Models\GetCampaignsResponse($decodedResponseBody);
+        return $getCampaignsResponse->getCampaigns();
+    }
+
+    /**
+     * Get logins by campaign id
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-logins-docpage/
+     *
+     * @return StringCollection
+     */
+    public function getLoginsByCampaign()
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/logins.json';
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+
+        return StringCollection::init($decodedResponseBody['logins']);
+    }
+
+    /**
+     * Get outlets by campaign id
+     * @param array $params ['page' => (int) 0-100, 'pageSize' => (int) 50]
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-outlets-docpage/
+     *
+     * @return Models\GetOutletsResponse
+     */
+    public function getOutletsResponse($params = [])
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/outlets.json';
+        $resource .= '?' . http_build_query($params);
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+
+        return new Models\GetOutletsResponse($decodedResponseBody);
+    }
+
+    /**
+     * Get only outlets data without pagination
+     *
+     * @param array $params
+     * @return null|Models\Outlets
+     */
+    public function getOutlets($params = [])
+    {
+        return $this->getOutletsResponse($params)->getOutlets();
+    }
+
+    /**
+     * Get outlet info
+     *
+     * @param $outletId
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-outlets-id-docpage/
+     *
+     * @return null|Models\Outlet
+     */
+    public function getOutlet($outletId)
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/outlets/' . $outletId . '.json';
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+
+        $getOrderResponse = new Models\GetOutletResponse($decodedResponseBody);
+        return $getOrderResponse->getOutlet();
     }
 
 
@@ -322,7 +429,6 @@ class PartnerClient extends AbstractServiceClient
         return new GetOrdersResponse($decodedResponseBody);
     }
 
-
     /**
      * Get only orders data without pagination
      *
@@ -333,7 +439,6 @@ class PartnerClient extends AbstractServiceClient
     {
         return $this->getOrdersResponse($params)->getOrders();
     }
-
 
     /**
      * Get order info
@@ -355,6 +460,62 @@ class PartnerClient extends AbstractServiceClient
         return $getOrderResponse->getOrder();
     }
 
+    /**
+     * Get Region
+     *
+     * @return Models\Region
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-region-docpage/
+     */
+    public function getRegion()
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/region.json';
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+        $getRegionResponse = new Models\GetRegionResponse($decodedResponseBody);
+        return $getRegionResponse->getRegion();
+    }
+
+    /**
+     * Get Campaign settings
+     *
+     * @retun Models\Settings
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-settings-docpage/
+     */
+    public function getSettings()
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/settings.json';
+       
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+       
+        $getSettingsResponse = new Models\GetSettingsResponse($decodedResponseBody);
+        return $getSettingsResponse->getSettings();
+    }
+  
+    /**
+     * @param $method [main | main-daily | main-weekly | main-monthly]
+     * @param array $params
+     * @return Models\Stats
+     *
+     * @link https://tech.yandex.ru/market/partner/doc/dg/reference/get-campaigns-id-stats-main-docpage/
+     */
+    public function getStats($method, $params = [])
+    {
+        $resource = 'campaigns/' . $this->campaignId . '/stats/' . $method . '.json';
+        $resource .= '?' . http_build_query($params);
+
+        $response = $this->sendRequest('GET', $this->getServiceUrl($resource));
+
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
+
+        $getStatsResponse = new Models\GetStatsResponse($decodedResponseBody);
+        return $getStatsResponse->getMainStats();
+    }
 
     /**
      * Send changed status to Yandex.Market
@@ -417,7 +578,6 @@ class PartnerClient extends AbstractServiceClient
                 'json' => [
                     'delivery' => $delivery->toArray()
                 ]
-
             ]
         );
 

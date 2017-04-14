@@ -11,7 +11,6 @@
  */
 namespace Yandex\SafeBrowsing;
 
-use Psr\Http\Message\UriInterface;
 use Yandex\Common\AbstractServiceClient;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Exception\ClientException;
@@ -142,7 +141,7 @@ class SafeBrowsingClient extends AbstractServiceClient
      * Sends a request
      *
      * @param string              $method  HTTP method
-     * @param string|UriInterface $uri     URI object or string.
+     * @param string $uri     URI object or string.
      * @param array               $options Request options to apply.
      *
      * @return Response
@@ -577,15 +576,15 @@ class SafeBrowsingClient extends AbstractServiceClient
         $chunkInfo = explode(':', $splitHead[0]);
         list($type, $chunkNum, $hashLen, $chunkLen) = $chunkInfo;
 
-        if ($chunkLen < 1) {
-            throw new SafeBrowsingException(
-                'ERROR: In chunkNum "' . $chunkNum . '" incorrect chunk length "' . $chunkLen . '"'
-            );
+        if ($chunkLen > 0) {
+            //Convert to hex for easy processing
+            //First get chunkData according to length
+            $chunkData = bin2hex(substr($splitHead[1], 0, $chunkLen));
+        } else {
+            //No ChunkData, Still Parse
+            $chunkData = '';
         }
 
-        //Convert to hex for easy processing
-        //First get chunkData according to length
-        $chunkData = bin2hex(substr($splitHead[1], 0, $chunkLen));
         if ($type == 'a') {
             $prefixes = [];
             while (strlen($chunkData) > 0) {
