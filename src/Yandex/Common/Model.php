@@ -3,7 +3,7 @@
  * Yandex PHP Library
  *
  * @copyright NIX Solutions Ltd.
- * @link https://github.com/nixsolutions/yandex-php-library
+ * @link      https://github.com/nixsolutions/yandex-php-library
  */
 
 /**
@@ -13,6 +13,7 @@ namespace Yandex\Common;
 
 /**
  * Class Model
+ *
  * @package Yandex\Common
  */
 abstract class Model
@@ -45,6 +46,60 @@ abstract class Model
     public function __construct($data = [])
     {
         $this->fromArray($data);
+    }
+
+    /**
+     * Set from XML
+     *
+     * @param \SimpleXMLIterator $data
+     * @return $this
+     */
+    public function fromXml(\SimpleXMLIterator $data)
+    {
+        //todo: refactor fromXml()
+        if (method_exists($this, 'add')) {
+            for ($data->rewind(); $data->valid(); $data->next()) {
+                $this->add($data->current());
+            }
+
+            return $this;
+        }
+
+        //collect attributes
+        if ($data->attributes()->count() > 0) {
+            foreach ($data->attributes() as $key => $attribute) {
+                $propertyName = $key;
+                $ourPropertyName = array_search($propertyName, $this->propNameMap, true);
+
+                if (false !== $ourPropertyName) {
+                    $propertyName = $ourPropertyName;
+                }
+
+                if (property_exists($this, $propertyName)) {
+                    $this->{$propertyName} = (string)$attribute;
+                }
+            }
+        }
+
+        //collect node data
+        for ($data->rewind(); $data->valid(); $data->next()) {
+            $propertyName = $data->key();
+            $ourPropertyName = array_search($propertyName, $this->propNameMap, true);
+
+            if (false !== $ourPropertyName) {
+                $propertyName = $ourPropertyName;
+            }
+
+            if (property_exists($this, $propertyName)) {
+                if (array_key_exists($propertyName, $this->mappingClasses)) {
+                    $this->{$propertyName} = new $this->mappingClasses[$propertyName]($data->current());
+                } else {
+                    $this->{$propertyName} = (string)$data->current();
+                }
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -83,6 +138,7 @@ abstract class Model
                 }
             }
         }
+
         return $this;
     }
 
@@ -95,6 +151,7 @@ abstract class Model
     public function fromJson($json)
     {
         $this->fromArray(json_decode($json, true));
+
         return $this;
     }
 
@@ -133,7 +190,7 @@ abstract class Model
                     continue;
                 }
                 $propNameMap = $key;
-                $obj         = $this;
+                $obj = $this;
                 if (is_object($data)) {
                     $obj = $data;
                 }
@@ -156,8 +213,10 @@ abstract class Model
                     }
                 }
             }
+
             return $result;
         }
+
         return $data;
     }
 }
