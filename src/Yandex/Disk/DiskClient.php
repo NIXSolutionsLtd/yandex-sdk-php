@@ -245,33 +245,49 @@ class DiskClient extends AbstractServiceClient
      * @param string $namespace
      * @return string|false
      *
-     * @see https://tech.yandex.com/disk/doc/dg/reference/propfind_property-request-docpage/
+     * @see https://tech.yandex.ru/disk/doc/dg/reference/property-request-docpage/
      */
-    public function getProperty($path = '', $property = '', $namespace = 'default:namespace')
+    public function getProperty($path = '', $property = '<?xml version="1.0" encoding="utf-8" ?><propfind xmlns="DAV:"></propfind>', $namespace = 'default:namespace')
     {
+        $body = '<?xml version="1.0" encoding="utf-8" ?><propfind xmlns="DAV:"></propfind>';
+
         if (!empty($property)) {
             $body = '<?xml version="1.0" encoding="utf-8" ?><propfind xmlns="DAV:"><prop><' . $property
                 . ' xmlns="' . $namespace . '"/></prop></propfind>';
+        }
 
-            $response = $this->sendRequest(
-                'PROPFIND',
-                $path,
-                [
-                    'headers' => [
-                        'Depth' => '1',
-                        'Content-Length' => strlen($body),
-                        'Content-Type' => 'application/x-www-form-urlencoded'
-                    ],
-                    'body' => $body
-                ]
-            );
+        $response = $this->sendRequest(
+            'PROPFIND',
+            $path,
+            [
+                'headers' => [
+                    'Depth' => '1',
+                    'Content-Length' => strlen($body),
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                ],
+                'body' => $body
+            ]
+        );
 
-            $decodedResponseBody = $this->getDecodedBody($response->getBody());
+        $decodedResponseBody = $this->getDecodedBody($response->getBody());
 
-            $resultStatus = $decodedResponseBody->children('DAV:')->response->propstat->status;
-            if (strpos($resultStatus, '200 OK')) {
-                return (string)$decodedResponseBody->children('DAV:')->response->propstat->prop->children();
+        $resultStatus = $decodedResponseBody->children('DAV:')->response->propstat->status;
+
+        if (strpos($resultStatus, '200 OK')) {
+            if (empty($property)) {
+                $props = (array)$decodedResponseBody->children('DAV:')->response->propstat->prop;
+
+                return [
+                    'etag' => $props['getetag'],
+                    'displayName' => $props['displayname'],
+                    'creationDate' => $props['creationdate'],
+                    'lastModified' => $props['getlastmodified'],
+                    'contentType' => $props['getcontenttype'],
+                    'contentLength' => $props['getcontentlength']
+                ];
             }
+
+            return (string)$decodedResponseBody->children('DAV:')->response->propstat->prop->children();
         }
 
         return false;
