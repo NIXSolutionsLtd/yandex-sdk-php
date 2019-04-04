@@ -247,7 +247,7 @@ class DiskClient extends AbstractServiceClient
      *
      * @see https://tech.yandex.ru/disk/doc/dg/reference/property-request-docpage/
      */
-    public function getProperty($path = '', $property = '<?xml version="1.0" encoding="utf-8" ?><propfind xmlns="DAV:"></propfind>', $namespace = 'default:namespace')
+    public function getProperty($path = '', $property = '', $namespace = 'default:namespace')
     {
         $body = '<?xml version="1.0" encoding="utf-8" ?><propfind xmlns="DAV:"></propfind>';
 
