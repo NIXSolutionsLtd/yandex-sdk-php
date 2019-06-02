@@ -117,7 +117,7 @@ class OAuthClient extends AbstractServiceClient
         if (isset($addtions)) {
 
             if (isset($addtions['state'])) {
-                $url .= '&state=' . $state;
+                $url .= '&state=' . $addtions['state'];
             }
 
 
