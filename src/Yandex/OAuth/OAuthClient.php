@@ -9,6 +9,7 @@
 /**
  * @namespace
  */
+
 namespace Yandex\OAuth;
 
 use GuzzleHttp\Exception\ClientException;
@@ -108,12 +109,33 @@ class OAuthClient extends AbstractServiceClient
      *
      * @return string
      */
-    public function getAuthUrl($type = self::CODE_AUTH_TYPE, $state = null)
+    public function getAuthUrl($type = self::CODE_AUTH_TYPE, $addtions = null)
     {
         $url = $this->getServiceUrl('authorize') . '?response_type=' . $type . '&client_id=' . $this->clientId;
-        if ($state) {
-            $url .= '&state=' . $state;
+
+
+        if (isset($addtions)) {
+
+            if (isset($addtions['state'])) {
+                $url .= '&state=' . $state;
+            }
+
+
+            if (isset($addtions['force_confirm']) && ($addtions['force_confirm'] == 'yes' || $addtions['force_confirm'] == 'no')) {
+                $url .= '&force_confirm=' . $addtions['force_confirm'];
+            }
+
+
+            if (isset($addtions['scope']) && is_array($addtions['scope'])) {
+                $url .= '&scope=';
+
+                foreach ($addtions['scope'] as $item) {
+                    $url .= $item . " ";
+                }
+            }
+
         }
+
 
         return $url;
     }
@@ -121,14 +143,14 @@ class OAuthClient extends AbstractServiceClient
     /**
      * Sends a redirect to the Yandex authentication page.
      *
-     * @param bool   $exit  indicates whether to stop the PHP script immediately or not
-     * @param string $type  a type of the authentication procedure
+     * @param bool $exit indicates whether to stop the PHP script immediately or not
+     * @param string $type a type of the authentication procedure
      * @param string $state optional string
      * @return bool|void
      */
-    public function authRedirect($exit = true, $type = self::CODE_AUTH_TYPE, $state = null)
+    public function authRedirect($exit = true, $type = self::CODE_AUTH_TYPE, $addtions = null)
     {
-        header('Location: ' . $this->getAuthUrl($type, $state));
+        header('Location: ' . $this->getAuthUrl($type, $addtions));
 
         return $exit ? exit() : true;
     }
@@ -138,11 +160,11 @@ class OAuthClient extends AbstractServiceClient
      *
      * @param $code
      *
-     * @throws AuthRequestException on a known request error
+     * @return self
      * @throws AuthResponseException on a response format error
      * @throws RequestException on an unknown request error
      *
-     * @return self
+     * @throws AuthRequestException on a known request error
      */
     public function requestAccessToken($code)
     {
@@ -158,9 +180,9 @@ class OAuthClient extends AbstractServiceClient
                         $this->clientSecret
                     ],
                     'form_params' => [
-                        'grant_type'    => 'authorization_code',
-                        'code'          => $code,
-                        'client_id'     => $this->clientId,
+                        'grant_type' => 'authorization_code',
+                        'code' => $code,
+                        'client_id' => $this->clientId,
                         'client_secret' => $this->clientSecret
                     ]
                 ]
@@ -201,7 +223,7 @@ class OAuthClient extends AbstractServiceClient
         $lifetimeInSeconds = $result['expires_in'];
 
         $expireDateTime = new \DateTime();
-        $expireDateTime->add(new \DateInterval('PT'.$lifetimeInSeconds.'S'));
+        $expireDateTime->add(new \DateInterval('PT' . $lifetimeInSeconds . 'S'));
 
         $this->setExpiresIn($expireDateTime);
 
