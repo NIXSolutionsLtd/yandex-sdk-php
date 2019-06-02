@@ -33,32 +33,8 @@ PHP библиотека к API Яндекса
 Установка с использованием менеджера пакетов [Composer](http://getcomposer.org):
 
 ```bash
-$ curl -s https://getcomposer.org/installer | php
+composer require tmdan/yandex-php-library
 ```
-
-Теперь вносим изменения в ваш `composer.json`:
-
-```yaml
-{
-    "require": {
-        "nixsolutions/yandex-php-library": "dev-master"
-    }
-}
-```
-
-### phar-архив
-
-Работа с [phar архивом](http://php.net/manual/en/book.phar.php):
-
-1. Скачиваем по [ссылке](http://yadi.sk/d/26YmC3hRByBd7) phar-файл или bz2-архив с ним, последней или конкретной версии.
-2. Сохраняем в папку с проектом.
-3. Используем!
-
-Пример подключения и работа с библиотекой из phar-архива:
-```php
-<?php
-//Подключаем autoload.php из phar-архива
-require_once 'phar://yandex-php-library_master.phar/vendor/autoload.php';
 
 use Yandex\Disk\DiskClient;
 
