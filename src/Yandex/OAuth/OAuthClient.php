@@ -119,6 +119,10 @@ class OAuthClient extends AbstractServiceClient
             if (isset($addtions['state'])) {
                 $url .= '&state=' . $addtions['state'];
             }
+            
+             if (isset($addtions['redirect_uri'])) {
+                $url .= '&redirect_uri=' . $addtions['redirect_uri'];
+            }
 
 
             if (isset($addtions['force_confirm']) && ($addtions['force_confirm'] == 'yes' || $addtions['force_confirm'] == 'no')) {
