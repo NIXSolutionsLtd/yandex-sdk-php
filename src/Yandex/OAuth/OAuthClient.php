@@ -250,7 +250,7 @@ class OAuthClient extends AbstractServiceClient
 
         $this->setAccessToken($result['access_token']);
 
-        dd($result);
+        $this->setRefreshToken($result['refresh_token']);
 
         $lifetimeInSeconds = $result['expires_in'];
 
