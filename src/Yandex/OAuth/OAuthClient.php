@@ -51,6 +51,11 @@ class OAuthClient extends AbstractServiceClient
     /**
      * @var string
      */
+    private $refreshToken = '';
+
+    /**
+     * @var string
+     */
     protected $serviceDomain = 'oauth.yandex.ru';
 
     /**
@@ -75,12 +80,33 @@ class OAuthClient extends AbstractServiceClient
         return $this;
     }
 
+
+    /**
+     * @param string $refreshToken
+     *
+     * @return self
+     */
+    public function setRefreshToken($refreshToken)
+    {
+        $this->refreshToken = $refreshToken;
+
+        return $this;
+    }
+
     /**
      * @return string
      */
     public function getClientId()
     {
         return $this->clientId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefreshToken()
+    {
+        return $this->refreshToken;
     }
 
     /**
@@ -223,6 +249,8 @@ class OAuthClient extends AbstractServiceClient
         }
 
         $this->setAccessToken($result['access_token']);
+
+        dd($result);
 
         $lifetimeInSeconds = $result['expires_in'];
 
