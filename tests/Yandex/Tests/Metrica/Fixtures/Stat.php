@@ -525,14 +525,17 @@ class Stat
             "ym:s:pageDepth",
             "ym:s:avgVisitDurationSeconds"
         ],
-        "sort"              => [
+        "sort"                 => [
             "-ym:s:visits"
+        ],
+        "direct_client_logins" => [
+            "yd-test"
         ],
         "limit"             => 100,
         "offset"            => 1,
         'filters'           => "ym:s:isMobile!='Yes'",
-        "date1"           => "2014-07-16",
-        "date2"           => "2014-07-22",
+        "date1"             => "2014-07-16",
+        "date2"             => "2014-07-22",
         'accuracy'          => 'medium',
         'callback'          => null,
         'include_undefined' => true,

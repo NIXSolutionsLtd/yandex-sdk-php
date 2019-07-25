@@ -26,7 +26,12 @@ class TableParams extends Model
      * @var null|StringCollection
      */
     protected $sort = null;
-
+    
+    /**
+     * @var null|StringCollection
+     */
+    protected $directClientLogins = null;
+    
     protected $limit = null;
 
     protected $offset = null;
@@ -50,7 +55,8 @@ class TableParams extends Model
     protected $mappingClasses = [];
 
     protected $propNameMap = [
-        'include_undefined' => 'includeUndefined'
+        'include_undefined' => 'includeUndefined',
+        'direct_client_logins' => 'directClientLogins',
     ];
 
     /**
@@ -160,6 +166,28 @@ class TableParams extends Model
     public function setSort($sort)
     {
         $this->sort = StringCollection::init($sort);
+        return $this;
+    }
+    
+    /**
+     * Retrieve the directClientLogins property
+     *
+     * @return string[]|null
+     */
+    public function getDirectClientLogins()
+    {
+        return is_null($this->directClientLogins) ? null : $this->directClientLogins->asArray();
+    }
+    
+    /**
+     * Set the directClientLogins property
+     *
+     * @param string|string[]|null $directClientLogins
+     * @return $this
+     */
+    public function setDirectClientLogins($directClientLogins)
+    {
+        $this->directClientLogins = StringCollection::init($directClientLogins);
         return $this;
     }
 
