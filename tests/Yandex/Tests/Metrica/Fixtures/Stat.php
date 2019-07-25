@@ -69,7 +69,8 @@ class Stat
             0 => [
                 "dimension" => [
                     "name" => "Windows",
-                    "id" => "windows"
+                    "id" => "windows",
+                    "direct_id" => "N-111000"
                 ],
                 "metrics" => [
                     16176,
