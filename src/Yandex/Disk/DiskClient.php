@@ -376,6 +376,46 @@ class DiskClient extends AbstractServiceClient
     }
 
     /**
+     * @param string $path
+     * @param array  $file
+     * @param array  $extraHeaders
+     *
+     * @return Response
+     *
+     * @see https://tech.yandex.com/disk/doc/dg/reference/put-docpage/
+     * @throws \Exception|ClientException
+     */
+    public function uploadRemoteFile($path = '', $file = null, $extraHeaders = null)
+    {
+        $headers = [];
+
+        //@formatter:off
+        $headers['Content-Length'] = (string)$file['size'];
+        $headers['Content-Type']   = (string)$file['mime'];
+        $headers['Etag']           = (string)$file['md5'];
+        $headers['Sha256']         = (string)$file['sha256'];
+        //@formatter:on
+
+        if(!empty($extraHeaders)){
+            $headers = array_merge($headers, (array)$extraHeaders);
+        }
+
+        $client  = $this->getClient();
+        $request = $client->createRequest(
+            'PUT',
+            $this->getServiceUrl(),
+            [
+                'headers' => $headers,
+                'body'    => fopen($file['path'], 'rb'),
+                'expect'  => true
+            ]
+        );
+        $request->setPath($path . $file['name']);
+
+        return $this->sendRequest($client, $request);
+    }
+
+    /**
      * @param $path
      * @param $size
      * @return array
