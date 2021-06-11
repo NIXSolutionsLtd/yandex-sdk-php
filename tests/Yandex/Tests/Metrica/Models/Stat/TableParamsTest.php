@@ -22,6 +22,7 @@ class TableParamsTest extends TestCase
             ->setDimensions($fixtures['dimensions'])
             ->setMetrics($fixtures['metrics'])
             ->setSort($fixtures['sort'])
+            ->setDirectClientLogins($fixtures['direct_client_logins'])
             ->setLimit($fixtures['limit'])
             ->setOffset($fixtures['offset'])
             ->setFilters($fixtures['filters'])
@@ -39,6 +40,7 @@ class TableParamsTest extends TestCase
         $this->assertEquals($fixtures['dimensions'], $comparisonParams->getDimensions());
         $this->assertEquals($fixtures['metrics'], $comparisonParams->getMetrics());
         $this->assertEquals($fixtures['sort'], $comparisonParams->getSort());
+        $this->assertEquals($fixtures['direct_client_logins'], $comparisonParams->getDirectClientLogins());
         $this->assertEquals($fixtures['limit'], $comparisonParams->getLimit());
         $this->assertEquals($fixtures['offset'], $comparisonParams->getOffset());
         $this->assertEquals($fixtures['filters'], $comparisonParams->getFilters());

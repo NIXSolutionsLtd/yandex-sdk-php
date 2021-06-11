@@ -15,10 +15,12 @@ class DimensionTest extends TestCase
         $dimension = new Models\Dimension();
         $dimension
             ->setId($fixtures["data"][0]["dimension"]["id"])
-            ->setName($fixtures["data"][0]["dimension"]["name"]);
+            ->setName($fixtures["data"][0]["dimension"]["name"])
+            ->setDirectId($fixtures["data"][0]["dimension"]["direct_id"]);
 
         $this->assertEquals($fixtures["data"][0]["dimension"]["name"], $dimension->getName());
         $this->assertEquals($fixtures["data"][0]["dimension"]["id"], $dimension->getId());
+        $this->assertEquals($fixtures["data"][0]["dimension"]["direct_id"], $dimension->getDirectId());
     }
 }
  
